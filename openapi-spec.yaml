@@ -1,0 +1,613 @@
+openapi: 3.1.0
+info:
+  title: Loan Service API
+  description: "A comprehensive loan management system that handles customer management\
+    \ and loan application processing. This API provides endpoints for creating and\
+    \ managing customers, submitting loan applications, and processing loan approvals\
+    \ through the complete loan lifecycle."
+  contact:
+    name: API Support
+    url: https://www.loanservice.com/support
+    email: support@loanservice.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+  description: Development Server
+- url: https://api.loanservice.com
+  description: Production Server
+tags:
+- name: Customer Management
+  description: APIs for managing customers in the loan service
+- name: Loan Application Management
+  description: APIs for managing loan applications and their lifecycle
+paths:
+  /api/v1/loan-applications/{id}/review:
+    put:
+      tags:
+      - Loan Application Management
+      summary: Start loan application review
+      description: Changes the status of a loan application to under review
+      operationId: reviewLoanApplication
+      parameters:
+      - name: id
+        in: path
+        description: Loan application ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: Loan application review started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+        "400":
+          description: Cannot review application in current state
+  /api/v1/loan-applications/{id}/reject:
+    put:
+      tags:
+      - Loan Application Management
+      summary: Reject loan application
+      description: Rejects a loan application with a specified reason
+      operationId: rejectLoanApplication
+      parameters:
+      - name: id
+        in: path
+        description: Loan application ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RejectionRequest"
+        required: true
+      responses:
+        "400":
+          description: Cannot reject application in current state
+        "200":
+          description: Loan application rejected successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+  /api/v1/loan-applications/{id}/disburse:
+    put:
+      tags:
+      - Loan Application Management
+      summary: Disburse loan
+      description: Disburses an approved loan to the customer
+      operationId: disburseLoan
+      parameters:
+      - name: id
+        in: path
+        description: Loan application ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: Loan disbursed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+        "400":
+          description: Cannot disburse loan in current state
+  /api/v1/loan-applications/{id}/approve:
+    put:
+      tags:
+      - Loan Application Management
+      summary: Approve loan application
+      description: Approves a loan application with specified amount and interest
+        rate
+      operationId: approveLoanApplication
+      parameters:
+      - name: id
+        in: path
+        description: Loan application ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApprovalRequest"
+        required: true
+      responses:
+        "400":
+          description: Cannot approve application in current state
+        "200":
+          description: Loan application approved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+  /api/v1/customers/{id}:
+    get:
+      tags:
+      - Customer Management
+      summary: Get customer by ID
+      description: Retrieves a customer by their unique identifier
+      operationId: getCustomerById
+      parameters:
+      - name: id
+        in: path
+        description: Customer ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "404":
+          description: Customer not found
+        "200":
+          description: Customer found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+    put:
+      tags:
+      - Customer Management
+      summary: Update customer
+      description: Updates an existing customer with the provided information
+      operationId: updateCustomer
+      parameters:
+      - name: id
+        in: path
+        description: Customer ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+        required: true
+      responses:
+        "200":
+          description: Customer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "404":
+          description: Customer not found
+    delete:
+      tags:
+      - Customer Management
+      summary: Delete customer
+      description: Deletes a customer from the system
+      operationId: deleteCustomer
+      parameters:
+      - name: id
+        in: path
+        description: Customer ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "204":
+          description: Customer deleted successfully
+        "404":
+          description: Customer not found
+  /api/v1/loan-applications:
+    get:
+      tags:
+      - Loan Application Management
+      summary: Get all loan applications
+      description: Retrieves all loan applications in the system
+      operationId: getAllLoanApplications
+      responses:
+        "200":
+          description: List of all loan applications
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+    post:
+      tags:
+      - Loan Application Management
+      summary: Submit loan application
+      description: Submits a new loan application for processing
+      operationId: submitLoanApplication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoanApplication"
+        required: true
+      responses:
+        "201":
+          description: Loan application submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+        "400":
+          description: Invalid application data provided
+  /api/v1/customers:
+    get:
+      tags:
+      - Customer Management
+      summary: Get all customers
+      description: Retrieves a list of all customers in the system
+      operationId: getAllCustomers
+      responses:
+        "200":
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+    post:
+      tags:
+      - Customer Management
+      summary: Create a new customer
+      description: Creates a new customer in the system with the provided information
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Customer"
+        required: true
+      responses:
+        "400":
+          description: Invalid customer data provided
+        "201":
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+  /api/v1/loan-applications/{id}:
+    get:
+      tags:
+      - Loan Application Management
+      summary: Get loan application by ID
+      description: Retrieves a loan application by its unique identifier
+      operationId: getLoanApplicationById
+      parameters:
+      - name: id
+        in: path
+        description: Loan application ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "404":
+          description: Loan application not found
+        "200":
+          description: Loan application found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+  /api/v1/loan-applications/status/{status}:
+    get:
+      tags:
+      - Loan Application Management
+      summary: Get loan applications by status
+      description: Retrieves all loan applications with a specific status
+      operationId: getLoanApplicationsByStatus
+      parameters:
+      - name: status
+        in: path
+        description: Application status
+        required: true
+        schema:
+          type: string
+          description: Loan application status
+          enum:
+          - SUBMITTED
+          - UNDER_REVIEW
+          - APPROVED
+          - REJECTED
+          - DISBURSED
+          - CANCELLED
+        example: UNDER_REVIEW
+      responses:
+        "200":
+          description: List of loan applications with the specified status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+  /api/v1/loan-applications/pending:
+    get:
+      tags:
+      - Loan Application Management
+      summary: Get pending loan applications
+      description: Retrieves all loan applications that are pending review
+      operationId: getPendingApplications
+      responses:
+        "200":
+          description: List of pending loan applications
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+  /api/v1/loan-applications/customer/{customerId}:
+    get:
+      tags:
+      - Loan Application Management
+      summary: Get loan applications by customer ID
+      description: Retrieves all loan applications for a specific customer
+      operationId: getLoanApplicationsByCustomerId
+      parameters:
+      - name: customerId
+        in: path
+        description: Customer ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+        example: 1
+      responses:
+        "200":
+          description: List of loan applications for the customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanApplication"
+  /api/v1/customers/search:
+    get:
+      tags:
+      - Customer Management
+      summary: Search customers by name
+      description: Searches for customers by first name or last name
+      operationId: searchCustomersByName
+      parameters:
+      - name: name
+        in: query
+        description: Name to search for
+        required: true
+        schema:
+          type: string
+        example: John
+      responses:
+        "200":
+          description: List of matching customers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+  /api/v1/customers/email/{email}:
+    get:
+      tags:
+      - Customer Management
+      summary: Get customer by email
+      description: Retrieves a customer by their email address
+      operationId: getCustomerByEmail
+      parameters:
+      - name: email
+        in: path
+        description: Customer email address
+        required: true
+        schema:
+          type: string
+        example: john.doe@example.com
+      responses:
+        "404":
+          description: Customer not found
+        "200":
+          description: Customer found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+components:
+  schemas:
+    LoanApplication:
+      type: object
+      description: Loan application entity representing a customer's loan request
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the loan application
+          example: 1
+          readOnly: true
+        customerId:
+          type: integer
+          format: int64
+          description: ID of the customer applying for the loan
+          example: 1
+        loanAmount:
+          type: number
+          description: Requested loan amount
+          example: 50000.0
+        loanType:
+          type: string
+          description: Type of loan being requested
+          enum:
+          - PERSONAL
+          - AUTO
+          - HOME
+          - STUDENT
+          - BUSINESS
+          example: PERSONAL
+        loanTermMonths:
+          type: integer
+          format: int32
+          description: Loan term in months
+          example: 36
+        purpose:
+          type: string
+          description: Purpose of the loan
+          example: Home improvement
+        status:
+          type: string
+          description: Current status of the loan application
+          enum:
+          - SUBMITTED
+          - UNDER_REVIEW
+          - APPROVED
+          - REJECTED
+          - DISBURSED
+          - CANCELLED
+          example: SUBMITTED
+          readOnly: true
+        interestRate:
+          type: number
+          description: Interest rate for the loan (set after approval)
+          example: 5.5
+          readOnly: true
+        monthlyPayment:
+          type: number
+          description: Calculated monthly payment amount
+          example: 1500.0
+          readOnly: true
+        approvalDate:
+          type: string
+          format: date-time
+          description: Date when the loan was approved
+          readOnly: true
+        rejectionReason:
+          type: string
+          description: Reason for loan rejection (if applicable)
+          example: Insufficient credit score
+          readOnly: true
+        creditScore:
+          type: integer
+          format: int32
+          description: Customer's credit score
+          example: 750
+        debtToIncomeRatio:
+          type: number
+          description: Customer's debt-to-income ratio
+          example: 0.35
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the application was created
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the application was last updated
+          readOnly: true
+      required:
+      - customerId
+      - loanAmount
+      - loanTermMonths
+      - loanType
+      - purpose
+    RejectionRequest:
+      type: object
+      description: Rejection details including reason
+      properties:
+        rejectionReason:
+          type: string
+          description: Reason for rejecting the loan application
+          example: Insufficient credit score
+      required:
+      - rejectionReason
+    ApprovalRequest:
+      type: object
+      description: Approval details including amount and interest rate
+      properties:
+        approvedAmount:
+          type: number
+          description: Approved loan amount
+          example: 25000.0
+        interestRate:
+          type: number
+          description: Interest rate for the loan
+          example: 5.5
+      required:
+      - approvedAmount
+      - interestRate
+    Customer:
+      type: object
+      description: Customer entity representing a loan applicant
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the customer
+          example: 1
+          readOnly: true
+        firstName:
+          type: string
+          description: Customer's first name
+          example: John
+        lastName:
+          type: string
+          description: Customer's last name
+          example: Doe
+        email:
+          type: string
+          description: Customer's email address
+          example: john.doe@example.com
+        phoneNumber:
+          type: string
+          description: Customer's phone number
+          example: +1-555-123-4567
+        address:
+          type: string
+          description: Customer's home address
+          example: 123
+        dateOfBirth:
+          type: string
+          description: Customer's date of birth
+          example: 1990-01-15
+        ssn:
+          type: string
+          description: Customer's Social Security Number
+          example: 123-45-6789
+        annualIncome:
+          type: number
+          format: double
+          description: Customer's annual income in USD
+          example: 75000.0
+        employmentStatus:
+          type: string
+          description: Customer's employment status
+          enum:
+          - EMPLOYED
+          - UNEMPLOYED
+          - SELF_EMPLOYED
+          - RETIRED
+          - STUDENT
+          example: EMPLOYED
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the customer record was created
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the customer record was last updated
+          readOnly: true
+      required:
+      - address
+      - email
+      - firstName
+      - lastName
+      - phoneNumber

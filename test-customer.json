@@ -1,0 +1,9 @@
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "phoneNumber": "+1234567890",
+  "address": "123 Main Street",
+  "annualIncome": 75000.0,
+  "employmentStatus": "EMPLOYED"
+}

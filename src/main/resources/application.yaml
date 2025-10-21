@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: loan-service
+  
+  # R2DBC H2 Database Configuration
+  r2dbc:
+    url: r2dbc:h2:mem:///loandb?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ""
+  
+  # Initialize schema
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+# Logging
+logging:
+  level:
+    org.springframework.r2dbc: DEBUG
+    io.r2dbc.h2: DEBUG
+
+# Server Configuration
+server:
+  port: 8080
