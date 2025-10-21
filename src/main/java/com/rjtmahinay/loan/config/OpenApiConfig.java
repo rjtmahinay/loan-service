@@ -19,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
                      "and processing loan approvals through the complete loan lifecycle.",
         contact = @Contact(
             name = "API Support",
-            email = "support@loanservice.com",
-            url = "https://www.loanservice.com/support"
+            email = "me@rjtmahinay.com",
+            url = "https://github.com/rjtmahinay"
         ),
         license = @License(
             name = "MIT License",
@@ -33,8 +33,8 @@ import org.springframework.context.annotation.Configuration;
             url = "http://localhost:8080"
         ),
         @Server(
-            description = "Production Server",
-            url = "https://api.loanservice.com"
+            description = "Demo Server",
+            url = "https://loan-service-git-rjtmahinay-dev.apps.rm1.0a51.p1.openshiftapps.com"
         )
     }
 )
