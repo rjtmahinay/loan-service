@@ -29,10 +29,6 @@ import org.springframework.context.annotation.Configuration;
     ),
     servers = {
         @Server(
-            description = "Development Server",
-            url = "http://localhost:8080"
-        ),
-        @Server(
             description = "Demo Server",
             url = "https://loan-service-git-rjtmahinay-dev.apps.rm1.0a51.p1.openshiftapps.com"
         )
