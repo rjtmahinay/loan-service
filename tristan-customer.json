@@ -1,0 +1,11 @@
+{
+  "firstName": "Tristan",
+  "lastName": "Mahinay",
+  "email": "tristan.mahinay@example.com",
+  "phoneNumber": "+63-917-123-4567",
+  "address": "123 Main Street, Manila, Philippines",
+  "dateOfBirth": "1995-03-15",
+  "ssn": "123-45-6789",
+  "annualIncome": 85000.00,
+  "employmentStatus": "EMPLOYED"
+}

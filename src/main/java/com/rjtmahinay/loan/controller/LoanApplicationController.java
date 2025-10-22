@@ -209,7 +209,39 @@ public class LoanApplicationController {
                 .onErrorReturn(ResponseEntity.badRequest().build());
     }
     
-    // DTOs for request bodies
+    @GetMapping("/total-value")
+    @Operation(summary = "Get total loan value", 
+               description = "Retrieves the total value of all loan applications in the system")
+    @ApiResponse(responseCode = "200", description = "Total loan value calculated successfully",
+                content = @Content(mediaType = "application/json", 
+                                 schema = @Schema(implementation = TotalLoanValueResponse.class)))
+    public Mono<ResponseEntity<TotalLoanValueResponse>> getTotalLoanValue() {
+        log.info("GET /api/v1/loan-applications/total-value - Calculating total loan value");
+        
+        return loanApplicationService.getTotalLoanValue()
+                .map(total -> ResponseEntity.ok(new TotalLoanValueResponse(total, null)))
+                .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+    
+    @GetMapping("/total-value/status/{status}")
+    @Operation(summary = "Get total loan value by status", 
+               description = "Retrieves the total value of loan applications filtered by status")
+    @ApiResponse(responseCode = "200", description = "Total loan value by status calculated successfully",
+                content = @Content(mediaType = "application/json", 
+                                 schema = @Schema(implementation = TotalLoanValueResponse.class)))
+    public Mono<ResponseEntity<TotalLoanValueResponse>> getTotalLoanValueByStatus(
+            @Parameter(description = "Application status filter", required = true, 
+                      example = "APPROVED", 
+                      schema = @Schema(implementation = ApplicationStatus.class))
+            @PathVariable ApplicationStatus status) {
+        log.info("GET /api/v1/loan-applications/total-value/status/{} - Calculating total loan value by status", status);
+        
+        return loanApplicationService.getTotalLoanValueByStatus(status)
+                .map(total -> ResponseEntity.ok(new TotalLoanValueResponse(total, status)))
+                .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+    
+    // DTOs for request and response bodies
     @Data
     @Schema(description = "Request body for approving a loan application")
     public static class ApprovalRequest {
@@ -226,5 +258,20 @@ public class LoanApplicationController {
         @Schema(description = "Reason for rejecting the loan application", 
                 example = "Insufficient credit score", required = true)
         private String rejectionReason;
+    }
+    
+    @Data
+    @Schema(description = "Response containing total loan value information")
+    public static class TotalLoanValueResponse {
+        @Schema(description = "Total value of loan applications", example = "1500000.00", required = true)
+        private BigDecimal totalValue;
+        
+        @Schema(description = "Application status filter applied (null if all statuses)", example = "APPROVED")
+        private ApplicationStatus status;
+        
+        public TotalLoanValueResponse(BigDecimal totalValue, ApplicationStatus status) {
+            this.totalValue = totalValue;
+            this.status = status;
+        }
     }
 }

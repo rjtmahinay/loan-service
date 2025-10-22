@@ -38,4 +38,10 @@ public interface LoanApplicationRepository extends ReactiveCrudRepository<LoanAp
     
     @Query("SELECT * FROM loan_applications WHERE approval_date >= :startDate AND status = 'APPROVED'")
     Flux<LoanApplication> findApprovedApplicationsSince(LocalDateTime startDate);
+    
+    @Query("SELECT COALESCE(SUM(loan_amount), 0) FROM loan_applications")
+    Mono<BigDecimal> getTotalLoanValue();
+    
+    @Query("SELECT COALESCE(SUM(loan_amount), 0) FROM loan_applications WHERE status = :status")
+    Mono<BigDecimal> getTotalLoanValueByStatus(ApplicationStatus status);
 }

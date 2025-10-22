@@ -166,6 +166,20 @@ public class LoanApplicationService {
                 .doOnNext(app -> log.debug("Found application: {} for customer: {}", app.getId(), app.getCustomerId()));
     }
     
+    public Mono<BigDecimal> getTotalLoanValue() {
+        log.info("Calculating total loan value across all applications");
+        return loanApplicationRepository.getTotalLoanValue()
+                .doOnSuccess(total -> log.info("Total loan value calculated: {}", total))
+                .doOnError(error -> log.error("Error calculating total loan value: {}", error.getMessage()));
+    }
+    
+    public Mono<BigDecimal> getTotalLoanValueByStatus(ApplicationStatus status) {
+        log.info("Calculating total loan value for applications with status: {}", status);
+        return loanApplicationRepository.getTotalLoanValueByStatus(status)
+                .doOnSuccess(total -> log.info("Total loan value for status {}: {}", status, total))
+                .doOnError(error -> log.error("Error calculating total loan value by status: {}", error.getMessage()));
+    }
+    
     private void calculateLoanTerms(LoanApplication application) {
         // Simple interest rate calculation based on loan type and amount
         BigDecimal baseRate = getBaseInterestRate(application.getLoanType());
