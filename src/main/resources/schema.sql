@@ -1,8 +1,7 @@
 -- Create customers table
 CREATE TABLE IF NOT EXISTS customers (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
+    name VARCHAR(200) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     phone_number VARCHAR(20),
     address TEXT NOT NULL,
@@ -28,7 +27,8 @@ CREATE TABLE IF NOT EXISTS loan_applications (
     approval_date TIMESTAMP NULL,
     rejection_reason TEXT,
     credit_score INTEGER,
-    debt_to_income_ratio DECIMAL(5,4),
+    downpayment DECIMAL(15,2),
+    monthly_debt_payments DECIMAL(10,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS loan_applications (
 
 -- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_customers_email ON customers(email);
-CREATE INDEX IF NOT EXISTS idx_customers_name ON customers(first_name, last_name);
+CREATE INDEX IF NOT EXISTS idx_customers_name ON customers(name);
 CREATE INDEX IF NOT EXISTS idx_loan_applications_customer_id ON loan_applications(customer_id);
 CREATE INDEX IF NOT EXISTS idx_loan_applications_status ON loan_applications(status);
 CREATE INDEX IF NOT EXISTS idx_loan_applications_created_at ON loan_applications(created_at);

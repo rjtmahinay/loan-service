@@ -9,16 +9,16 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface CustomerRepository extends ReactiveCrudRepository<Customer, Long> {
-    
+
     Mono<Customer> findByEmail(String email);
-    
+
     Mono<Boolean> existsByEmail(String email);
-    
-    @Query("SELECT * FROM customers WHERE first_name ILIKE '%' || :name || '%' OR last_name ILIKE '%' || :name || '%'")
+
+    @Query("SELECT * FROM customers WHERE name ILIKE '%' || :name || '%'")
     Flux<Customer> findByNameContaining(String name);
-    
+
     Mono<Customer> findBySsn(String ssn);
-    
+
     @Query("SELECT * FROM customers WHERE annual_income >= :minIncome")
     Flux<Customer> findByAnnualIncomeGreaterThanEqual(Double minIncome);
 }
