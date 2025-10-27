@@ -72,6 +72,10 @@ public class LoanApplication {
     @Schema(description = "Customer's monthly debt payments", example = "1200.00")
     private BigDecimal monthlyDebtPayments;
 
+    @Column("employment_years")
+    @Schema(description = "Number of years the customer has been employed", example = "5")
+    private Integer employmentYears;
+
     @Column("created_at")
     @Schema(description = "Timestamp when the application was created", accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime createdAt;

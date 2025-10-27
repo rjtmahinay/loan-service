@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS loan_applications (
     credit_score INTEGER,
     downpayment DECIMAL(15,2),
     monthly_debt_payments DECIMAL(10,2),
+    employment_years INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
