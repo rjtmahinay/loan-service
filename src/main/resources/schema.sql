@@ -30,6 +30,11 @@ CREATE TABLE IF NOT EXISTS loan_applications (
     downpayment DECIMAL(15,2),
     monthly_debt_payments DECIMAL(10,2),
     employment_years INTEGER,
+    vehicle_vin VARCHAR(17),
+    vehicle_make VARCHAR(50),
+    vehicle_year INTEGER,
+    vehicle_model VARCHAR(50),
+    zip_code VARCHAR(10),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     

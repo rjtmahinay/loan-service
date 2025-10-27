@@ -65,16 +65,36 @@ public class LoanApplication {
     private Integer creditScore;
 
     @Column("downpayment")
-    @Schema(description = "Down payment amount for the loan", example = "10000.00")
+    @Schema(description = "Down payment amount for the loan", example = "10000.00", required = true)
     private BigDecimal downpayment;
 
     @Column("monthly_debt_payments")
-    @Schema(description = "Customer's monthly debt payments", example = "1200.00")
+    @Schema(description = "Customer's monthly debt payments", example = "1200.00", required = true)
     private BigDecimal monthlyDebtPayments;
 
     @Column("employment_years")
-    @Schema(description = "Number of years the customer has been employed", example = "5")
+    @Schema(description = "Number of years the customer has been employed", example = "5", required = true)
     private Integer employmentYears;
+
+    @Column("vehicle_vin")
+    @Schema(description = "Vehicle Identification Number (VIN) for collateral", example = "1HGCM82633A123456", required = true)
+    private String vin;
+
+    @Column("vehicle_make")
+    @Schema(description = "Vehicle make for collateral", example = "Honda", required = true)
+    private String make;
+
+    @Column("vehicle_year")
+    @Schema(description = "Vehicle year for collateral", example = "2020", required = true)
+    private Integer year;
+
+    @Column("vehicle_model")
+    @Schema(description = "Vehicle model for collateral", example = "Accord", required = true)
+    private String model;
+
+    @Column("zip_code")
+    @Schema(description = "Zip code for collateral location", example = "90210", required = true)
+    private String zipCode;
 
     @Column("created_at")
     @Schema(description = "Timestamp when the application was created", accessMode = Schema.AccessMode.READ_ONLY)
